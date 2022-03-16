@@ -230,3 +230,96 @@ DROP TABLE customers;
 ```sql
 SELECT * FROM salespeople INNER JOIN dealerships ON salespeople.dealership_id = dealerships.dealership_id ORDER BY 1;
 ```
+```sql
+SELECT s.* FROM salespeople s INNER JOIN dealerships d ON d.dealership_id = s.dealership_id WHERE d.state = 'CA' ORDER BY 1;
+```
+Alternatively, you can also put the AS keyword between the table name and alias to make the alias more explicit:
+```sql
+SELECT s.* FROM salespeople AS s INNER JOIN dealerships AS d ON d.dealership_id = s.dealership_id WHERE d.state = 'CA' ORDER BY 1;
+```
+**OUTER JOIN**
+Sometimes, however, we want to return all rows from one of the tables regardless of whether the join predicate is met. In this case, the join predicate is not met; the row forthe second table will be returned as NULL. These joins, where at least one table will be represented in every row after the join operation, are known as outer joins. **Left outer joins** are where the left table will have every row returned. If a row from the other table is not found, a row of NULL is returned. Left outer joins are performed by using the LEFT OUTER JOIN keywords followed by a join predicate. This can also be written in short as LEFT JOIN. To show how left outer joins work, let's examine two tables: the customers tables and the emails table. For the time being, assume that not every customer has been sent an email, and we want to mail all customers who have not received an email. We can use outer joins to make that happen. Let's do a left outer join between the customer table on the leftand the emails table on the right. To help manage output, we will only limit it to the first1,000 rows. The following code snippet is utilized:
+```sql
+SELECT * FROM customers c LEFT OUTER JOIN emails e ON e.customer_id = c.customer_id ORDER BY c.customer_id LIMIT 1000;
+```
+Because those customers who were never sent an email have a null customer_id column in the emails table, we can find all of these customers by checking the customer_id column in the emails table as follows:
+```sql
+SELECT * FROM customers c LEFT OUTER JOIN emails e ON c.customer_id = e.customer_id WHERE e.customer_id IS NULL ORDER BY c.customer_id LIMIT 1000;
+```
+A **right outer join** is very similar to a left join, except the table on the "right" (the second listed table) will now have every row show up, and the "left" table will have NULLs if the join condition is not met.
+```sql
+SELECT * FROM emails e RIGHT OUTER JOIN customers c ON e.customer_id=c.customer_id ORDER BY c.customer_id LIMIT 1000;
+```
+Finally, there is the **full outer join.** The full outer join will return all rows from the left and right tables, regardless of whether the join predicate is matched. For rows where the join predicate is met, the two rows are combined in a group. For rows where they are not met, the row has NULL filled in.
+```sql
+SELECT * FROM email e FULL OUTER JOIN customers c ON e.customer_id=c.customer_id;
+```
+**CROSS JOIN**
+The cross join is mathematically what is also referred to as the Cartesian product – it returns every possible combination of rows from the "left" table and the "right" table.
+```sql
+SELECT p1.product_id, p1.model, p2.product_id, p2.model FROM products p1 CROSS JOIN products p2;
+```
+**Exercise** The head of sales at your company would like a list of all customers who bought a car. We need to create a query that will return all customer IDs, first names, last names, and valid phone numbers of customers who purchased a car.
+```sql
+SELECT c.customer_id, c.first_name, c.last_name, c.phone FROM sales s
+INNER JOIN customers c ON c.customer_id=s.customer_id INNER JOIN products p ON p.product_id=s.product_id WHERE p.product_type='automobile' AND c.phone IS NOT NULL
+```
+**Subqueries**
+Instead of joining the two tables and filtering for rows with the state equal to 'CA', we first find the dealerships where the state equals 'CA' and then inner join the rows in that query to salespeople. If a query only has one column, you can use a subquery with the IN keyword in a WHERE
+clause. For example, another way to extract the details from the salespeople table using the dealership ID for the state of California would be as follows:
+```sql
+SELECT * FROM salespeople WHERE dealership_id IN (SELECT dealership_id FROM dealerships WHERE dealerships.state = 'CA') ORDER BY 1
+```
+**Unions**
+So far, we have been joining data horizontally. That is, with joins, new columns are effectively added horizontally. However, we may be interested in putting multiple queries together vertically; that is, by keeping the same number of columns but adding multiple rows. An example may help to clarify this. Let's say you wanted to visualize the addresses of dealerships and customers using Google Maps. To do this, you would need both the addresses of customers and dealerships You could build a query with all customer addresses as follows:
+```sql
+SELECT street_address, city, state, postal_code FROM customers WHERE street_address IS NOT NULL;
+```
+```sql
+SELECT street_address, city, state, postal_code FROM customers WHERE street_address IS NOT NULL;
+```
+Retrieve dealership addresses with the following query:
+```sql
+SELECT street_address, city, state, postal_code FROM dealerships WHERE street_address IS NOT NULL;
+```
+It would be nice if we could assemble the two queries together into one list with one query. This is where the UNION keyword comes into play. Using the two previous queries, we could create the query:
+```sql
+(SELECT street_address, city, state, postal_code FROM customers WHERE street_address IS NOT NULL) UNION (SELECT street_address, city, state, postal_code FROM dealerships WHERE street_address IS NOT NULL) ORDER BY 1;
+```
+**Exercise**
+In this exercise, we will assemble two queries using unions. In order to help build up marketing awareness for the new Model Chi, the marketing team would like to throw a party for some of ZoomZoom's wealthiest customers in Los Angeles, CA. To help facilitate the party, they would like you to make a guest list with ZoomZoom customers who live in Los Angeles, CA, as well as salespeople who work at the ZoomZoom dealership in Los Angeles, CA. The guest list should include the first name, the last name, and whether the guest is a customer or an employee.
+```sql
+(SELECT first_name, last_name, 'Customer' as guest_type FROM customers WHERE city='Los Angeles' AND state='CA') UNION (SELECT first_name, last_name, 'Employee' as guest_type FROM salespeople s INNER JOIN dealerships d ON d.dealership_id=s.dealership_id WHERE d.city='Los Angeles' AND d.state='CA')
+```
+**NULLIF**
+```sql
+SELECT customer_id, NULLIF(title, 'Honorable') as title, first_name, last_name,suffix, email, gender, ip_address, phone, street_address, city, state, postal_code, latitude, longitude, date_added FROM customers c ORDER BY 1
+```
+
+
+**LEAST/GREATEST**
+Two functions that come in handy for data preparation are the LEAST and GREATEST functions. Each function takes any number of values and returns the least or the greatest of the values, respectively. A simple use of this variable would be to replace the value if it's too high or low. For example, the sales team may want to create a sales list where every scooter is $600 or less than that. We can create this using the following query:
+```sql
+SELECT product_id, model, year, product_type, LEAST(600.00, base_msrp) as base_msrp, production_start_date, production_end_date FROM products WHERE product_type='scooter' ORDER BY 1;
+```
+**Casting**
+Another useful data transformation is to change the data type of a column within aquery. This is usually done to use a function only available to one data type, such astext, while working with a column that is in a different data type, such as a numeric. To change the data type of a column, you simply need to use the column::datatype format, where column is the column name, and datatype is the data type you want to change the column to. For example, to change the year in the products table to a text column in aquery, use the following query:
+```sql
+SELECT product_id, model, year::TEXT, product_type, base_msrp, production_start_date, production_end_date FROM products;
+```
+This will convert the year column to text. You can now apply text functions to this transformed column. There is one final catch; not every data type can be cast to aspecific data type. For instance, datetime cannot be cast to float types.
+
+**DISTINCT** & **DISTINCT ON**
+You may be interested in determining the unique values in a column or group of columns. This is the primary use case of the
+DISTINCT keyword. For example, if you wanted to know all the unique model years in the products table, you could use the following query:
+```sql
+SELECT DISTINCT FROM products ORDER 1;
+```
+```sql
+SELECT DISTINCT year, product_type FROM products ORDER BY 1, 2;
+```
+
+
+```sql
+SELECT DISTINCT ON (first_name) * FROM salespeople ORDER BY first_name, hire_date;
+```

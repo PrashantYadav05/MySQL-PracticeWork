@@ -184,7 +184,7 @@ WHERE
 ```
 Here, {table_name} is the name of the table with data that will be changed, {column_1},{column_2},… {column_last} is the columns whose values you want to change, {column_value_1}, {column_value_2},… {column_value_last} is the new values you want to insertinto those columns, and {WHERE} is a conditional statement like one you would find in aSQL query. To illustrate its use of the update statement, let's say that for the rest of the year, the company has decided to sell all scooter models before 2018 for $299.99. We could change the data in the products table using the following query:
 ```sql
-UPDATE productsSET base_msrp = 299.99, WHEREproduct_type = 'scooter'AND year<2018;
+UPDATE productsSET base_msrp = 299.99, WHERE product_type = 'scooter'AND year<2018;
 ```
 * **Exercise:** Our goal in this exercise is to update the data in a table using the UPDATE statement. Dueto the higher cost of rare metals needed to manufacture an electric vehicle, the new2019 Model Chi will need to undergo a price hike of 10%. Update the products table to increase the price of this product.
 ```sql
@@ -223,4 +223,10 @@ DROP TABLE {table_name};
 Here, {table_name} is the name of the table you want to delete. If we wanted to delete all the data in the customers table along with the table itself, we would write:
 ```sql
 DROP TABLE customers;
+```
+## Assembling Data
+* **Connecting Tables Using JOIN** Majority of the time, the data you are interested in is spread across multiple tables. Fortunately, SQL has methods for bringing related tables together using the JOIN keyword.
+* **INNER JOIN**
+```sql
+SELECT * FROM salespeople INNER JOIN dealerships ON salespeople.dealership_id = dealerships.dealership_id ORDER BY 1;
 ```

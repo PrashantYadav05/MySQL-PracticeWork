@@ -323,3 +323,29 @@ SELECT DISTINCT year, product_type FROM products ORDER BY 1, 2;
 ```sql
 SELECT DISTINCT ON (first_name) * FROM salespeople ORDER BY first_name, hire_date;
 ```
+## Aggregate Functions
+
+```sql
+SELECT COUNT(customer_id) FROM customers;
+```
+```sql
+SELECT COUNT(*) FROM customers;
+```
+```sql
+SELECT COUNT(DISTINCT state) FROM customers;
+```
+```sql
+SELECT COUNT(*) FROM customers WHERE state='CA';
+```
+```sql
+SELECT COUNT(*)/2 FROM customers;
+```
+```sql
+SELECT SUM(base_msrp)::FLOAT/COUNT(*) AS avg_base_msrp FROM products
+```
+```sql
+SELECT MIN(base_msrp), MAX(base_msrp), AVG(base_msrp), STDDEV(base_msrp)FROM products;
+```
+```sql
+SELECT state, COUNT(*) FROM customers GROUP BY state;
+```

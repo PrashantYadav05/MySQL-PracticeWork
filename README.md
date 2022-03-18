@@ -324,28 +324,80 @@ SELECT DISTINCT year, product_type FROM products ORDER BY 1, 2;
 SELECT DISTINCT ON (first_name) * FROM salespeople ORDER BY first_name, hire_date;
 ```
 ## Aggregate Functions
-
+Functions that take rows as input and return one number for each row. 
+**COUNT** function to count how many rows there are in the customers table.
 ```sql
 SELECT COUNT(customer_id) FROM customers;
 ```
+The **COUNT** function will return the number of rows without a NULL value in the column. As the customer_id column is a primary key and cannot be NULL, the COUNT function will return the number of rows in the table. However, if every single column has at least one NULL value, then it would be impossible to determine how many rows there are. To get a count of the number of rows in that situation, you could alternatively use the**COUNT** function with an asterisk, (*), to get the total count of rows:
+
 ```sql
 SELECT COUNT(*) FROM customers;
 ```
+However, if you were interested in was the number of unique states in the customer list. This answer could be queried using COUNT (DISTINCT expression):
 ```sql
 SELECT COUNT(DISTINCT state) FROM customers;
 ```
+If you wanted to know how many customers ZoomZoom had in California, you could use the following query:
 ```sql
 SELECT COUNT(*) FROM customers WHERE state='CA';
 ```
+You can also do arithmetic with aggregate functions. In the following query, you can divide the count of rows in the customers table by two like so:
 ```sql
 SELECT COUNT(*)/2 FROM customers;
 ```
+You can also use the aggregate functions with each other in mathematical ways. In the following query, instead of using the AVG function to calculate the average MSRP of products at ZoomZoom, you could "build" the AVG function using SUM and COUNT as follows:
 ```sql
 SELECT SUM(base_msrp)::FLOAT/COUNT(*) AS avg_base_msrp FROM products
 ```
+**Exercise** Calculate the lowest, highest, average, and standard deviation of the price using the MIN, MAX, AVG, and STDDEV aggregate functions, respectively, from the products.
+table:
 ```sql
 SELECT MIN(base_msrp), MAX(base_msrp), AVG(base_msrp), STDDEV(base_msrp)FROM products;
 ```
+### Aggregate Functions with GROUP BY
+We could determine how many states there are with the following query:
+```sql
+SELECT DISTINCT state FROM customers;
+```
+Once you have the list of states, you could then run the following query for each state:
+
+
+
+
+**GROUP BY** statements usually have the following structure:
+SELECT {KEY}, {AGGFUNC(column1)} FROM {table1} GROUP BY {KEY}
+
+Let's count the number of customers in each US state using a GROUP BY query. Using GROUP BY, a SQL user could count the number of
+customers in each state by querying:
 ```sql
 SELECT state, COUNT(*) FROM customers GROUP BY state;
+```
+You can also use the column number to perform a GROUP BY operation:
+```sql
+SELECT state, COUNT(*) FROM customers GROUP BY state GROUP BY 1;
+```
+If you want to return the output in alphabetical order, simply use the following query:
+```sql
+SELECT state, COUNT(*) FROM customers GROUP BY state ORDER BY state;
+```
+```sql
+SELECT state, COUNT(*) FROM customers GROUP BY 1ORDER BY 1;
+```
+You may be interested in ordering the aggregates themselves. The aggregates can be ordered using ORDER BY as follows:
+```sql
+SELECT state, COUNT(*) FROM customers GROUP BY state ORDER BY COUNT(*);
+```
+You may also want to count only a subset of the data, such as the total number of male customers. To calculate the total number of male customers, you can use the following query:
+```sql
+SELECT state, COUNT(*) FROM customers WHERE gender='M' GROUP BY state ORDER BY state;
+```
+### Multiple Column GROUP BY
+Let's say you wanted to get a count of not just the number of customers ZoomZoom had in each state, but also of how many male and female customers it had in each state. Multiple GROUP BY columns can query the answer as follows:
+```sql
+SELECT state, gender, COUNT(*) FROM customers GROUP BY state, genderORDER BY state, gender;
+```
+**Exercise** Calculate the lowest, highest, average, and standard deviation price using the MIN, MAX, AVG, and STDDEV aggregate functions, respectively, from the products table and use GROUP BY to check the price of all the different product types:
+```sql
+SELECT product_type, MIN(base_msrp), MAX(base_msrp), AVG(base_msrp), STDDEV(base_msrp) FROM products GROUP BY 1 ORDER BY 1;;
 ```

@@ -401,3 +401,11 @@ SELECT state, gender, COUNT(*) FROM customers GROUP BY state, genderORDER BY sta
 ```sql
 SELECT product_type, MIN(base_msrp), MAX(base_msrp), AVG(base_msrp), STDDEV(base_msrp) FROM products GROUP BY 1 ORDER BY 1;;
 ```
+## Window Functions
+```sql
+SELECT customer_id, title, first_name, last_name, gender, COUNT(*) OVER () as total_customers FROM customers ORDER BY customer_id;
+```
+## Importing & Exporting Data
+
+## Analytics Using Complex Data Types
+## Case Study & Exercises

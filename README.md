@@ -419,6 +419,22 @@ SELECT product_type, MIN(base_msrp), MAX(base_msrp), AVG(base_msrp), STDDEV(base
 SELECT customer_id, title, first_name, last_name, gender, COUNT(*) OVER () as total_customers FROM customers ORDER BY customer_id;
 ```
 ## Importing & Exporting Data
+```sql
+COPY (SELECT * FROM customers LIMIT 5) TO STDOUT WITH CSV HEADER;
+```
+This statement returns five rows from the table, with each record on a new line, and each value separated by a comma, in a typical .csv file format. The header is also included at the top.
+* COPY is simply the command used to transfer data to a file format.
+* (SELECT * FROM customers LIMIT 5) is the query that we want to copy.
+* TO STDOUT indicates that the results should be printed rather than saved to a file on the hard drive. "Standard Out" is the common term for displaying output in a command-line terminal environment.
+* WITH is an optional keyword used to separate the parameters that we will use in the database-to-file transfer.
+* CSV indicates that we will use the CSV file format. We could have also specified BINARY or left this out altogether and received the output in text format.
+* HEADER indicates that we want the header printed as well.
+
+
+```sql
+COPY (SELECT * FROM customers LIMIT 5) TO "/path/to/my_file.csv" WITH CSV HEADER;
+```
+
 
 ## Analytics Using Complex Data Types
 ## Case Study & Exercises

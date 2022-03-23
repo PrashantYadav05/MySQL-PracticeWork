@@ -4,9 +4,9 @@
 * **SELECT and FROM**
 The most basic SELECT query follows the pattern SELECT…FROM <table_name>;. This query is the way to pull data from a single table. For example, if you want to pull all the data from the products table in our sample database, simply use this query:
 ```sql 
-SELECT * FROM products
+SELECT * FROM products;
 ```
-If we want to return only specific columns from a query, we can simply replace the asteriskwith the names of the columns we want to be separated in the order we want them tobe returned in. For example, if we wanted to return the product_id column followed bythe model column of the products table, we would write the following query:
+If we want to return only specific columns from a query, we can simply replace the asterisk with the names of the columns we want to be separated in the order we want them tobe returned in. For example, if we wanted to return the product_id column followed by the model column of the products table, we would write the following query:
 ```sql 
 SELECT product_id, model FROM products;
 ```
@@ -18,8 +18,7 @@ SELECT model, product_id,  FROM products;
 ```sql 
 SELECT model FROM products WHERE year=2014;
 ```
-* **AND/OR** The previous query had only one condition. We are often interested in multiple conditions being met at once. For this, we put multiple statements together using the AND or OR clause. Now, we will illustrate this with an example. Let's say we wanted to return models
-that not only were built in 2014, but also have a manufacturer's suggested retail price (MSRP) of less than $1,000. We can write:
+* **AND/OR** The previous query had only one condition. We are often interested in multiple conditions being met at once. For this, we put multiple statements together using the AND or OR clause. Now, we will illustrate this with an example. Let's say we wanted to return models that not only were built in 2014, but also have a manufacturer's suggested retail price (MSRP) of less than $1,000. We can write:
 ```sql 
 SELECT model FROM products WHERE year=2014 AND msrp<=1000;
 ```
@@ -35,7 +34,7 @@ However, to clarify the WHERE clause, it would be preferable to write:
 ```sql 
 SELECT * FROM products WHERE (year>2014 AND year<2016) OR product_type='scooter';
 ```
-* **IN/NOT IN** For instance, let's sayyou were interested in returning all models with the year 2014, 2016, or 2019. You could write a query such as this:
+* **IN/NOT IN** For instance, let's say you were interested in returning all models with the year 2014, 2016, or 2019. You could write a query such as this:
 ```sql 
 SELECT * FROM products WHERE WHERE year = 2014 OR year = 2016 OR year = 2019;
 ```
@@ -60,9 +59,9 @@ If you would like to extract data in greatest-to-least order, you can use the DE
 ```sql 
 SELECT model FROM products ORDER BY production_start_date DESC;
 ```
-Also, instead of writing the name of the column you want to order by, you can instead refer to what number column it is in the natural order of the table. For instance, say you wanted to return all the models in the products table ordered by product ID. You couldwrite:
+Also, instead of writing the name of the column you want to order by, you can instead refer to what number column it is in the natural order of the table. For instance, say you wanted to return all the models in the products table ordered by product ID. You could write:
 ```sql
-SELECT modelFROM products ORDER BY product_id;
+SELECT model FROM products ORDER BY product_id;
 ```
 However, because product_id is the first column in the table, you could instead write:
 ```sql
@@ -76,7 +75,7 @@ SELECT * FROM products ORDER BY year DESC, base_msrp ASC;
 ```sql
 SELECT model FROM products ORDER BY production_start_date LIMIT 5;
 ```
-* **IS NULL/IS NOT NULL** Whatever the reason, we are often interested in finding rows where the data is not filled in for a certain value. In SQL, blank values are often represented by the NULL value. For instance, in the products table,the production_end_date column having a NULL value indicates that the product is still being made. In this case, if we want to list all products that are still being made, we canuse the following query:
+* **IS NULL/IS NOT NULL** Whatever the reason, we are often interested in finding rows where the data is not filled in for a certain value. In SQL, blank values are often represented by the NULL value. For instance, in the products table,the production_end_date column having a NULL value indicates that the product is still being made. In this case, if we want to list all products that are still being made, we can use the following query:
 ```sql
 SELECT model FROM products WHERE production_end_date IS NULL;
 ```
@@ -84,13 +83,13 @@ If we are only interested in products that are not being produced, we can use th
 ```sql
 SELECT model FROM products WHERE production_end_date IS NOT NULL;
 ```
-* **Exercise:** Create a list of the online usernames of the first 10 female salespeople hired, ordered from the first hired to the latest hired.
+* **Exercise:** Create a list of the online usernames of the first 10 female sales people hired, ordered from the first hired to the latest hired.
 ```sql
-SELECT username FROM salespeople WHERE gender= 'Female' ORDER BY hire_date LIMIT 10
+SELECT username FROM salespeople WHERE gender= 'Female' ORDER BY hire_date LIMIT 10;
 ```
 * **Exercise:** Write a query that pulls all emails for ZoomZoom customers in the state of Florida in alphabetical order.
 ```sql
-SELECT email FROM customers WHERE city= 'Florida' ORDER BY email
+SELECT email FROM customers WHERE city= 'Florida' ORDER BY email;
 ```
 * **Exercise:** Write a query that pulls all the first names, last names and email details for ZoomZoom customers in New York City in the state of New York. They should be ordered alphabetically by the last name followed by the first name.
 ```sql
@@ -108,8 +107,7 @@ CREATE TABLE {table_name} (
 {column_name_2} {data_type_2} {column_constraint_2},
 {column_name_3} {data_type_3} {column_constraint_3},
 …
-{column_name_last} {data_type_last} {column_constraint_last},
-);
+{column_name_last} {data_type_last} {column_constraint_last},);
 ```
 Here {table_name} is the name of the table, {column_name} is the name of the column, {data_type} is the data type of the column, and {column_constraint} is one or more optional keywords giving special properties to the column. Before we discuss how to use the CREATE TABLE query, we will first discuss column constraints.
 
@@ -120,7 +118,7 @@ Here {table_name} is the name of the table, {column_name} is the name of the col
 
 Suppose we want to create a table called state_populations, and it has columns with states' initials and populations. The query would look like this:
 ```sql
-CREATE TABLE state_populations (^state VARCHAR(2) PRIMARY KEY, population NUMERIC);
+CREATE TABLE state_populations (state VARCHAR(2) PRIMARY KEY, population NUMERIC);
 ```
 * **Exercise:** The marketing team at ZoomZoom would like to create a table called countries to analyze the data of different countries. It should have four columns: an integer key column, a unique name column, a founding year column, and a capital column.
 ```sql
@@ -184,7 +182,7 @@ WHERE
 ```
 Here, {table_name} is the name of the table with data that will be changed, {column_1},{column_2},… {column_last} is the columns whose values you want to change, {column_value_1}, {column_value_2},… {column_value_last} is the new values you want to insertinto those columns, and {WHERE} is a conditional statement like one you would find in aSQL query. To illustrate its use of the update statement, let's say that for the rest of the year, the company has decided to sell all scooter models before 2018 for $299.99. We could change the data in the products table using the following query:
 ```sql
-UPDATE productsSET base_msrp = 299.99, WHERE product_type = 'scooter'AND year<2018;
+UPDATE products SET base_msrp = 299.99, WHERE product_type = 'scooter'AND year<2018;
 ```
 * **Exercise:** Our goal in this exercise is to update the data in a table using the UPDATE statement. Dueto the higher cost of rare metals needed to manufacture an electric vehicle, the new2019 Model Chi will need to undergo a price hike of 10%. Update the products table to increase the price of this product.
 ```sql
@@ -238,7 +236,7 @@ Alternatively, you can also put the AS keyword between the table name and alias 
 SELECT s.* FROM salespeople AS s INNER JOIN dealerships AS d ON d.dealership_id = s.dealership_id WHERE d.state = 'CA' ORDER BY 1;
 ```
 **OUTER JOIN**
-Sometimes, however, we want to return all rows from one of the tables regardless of whether the join predicate is met. In this case, the join predicate is not met; the row forthe second table will be returned as NULL. These joins, where at least one table will be represented in every row after the join operation, are known as outer joins. **Left outer joins** are where the left table will have every row returned. If a row from the other table is not found, a row of NULL is returned. Left outer joins are performed by using the LEFT OUTER JOIN keywords followed by a join predicate. This can also be written in short as LEFT JOIN. To show how left outer joins work, let's examine two tables: the customers tables and the emails table. For the time being, assume that not every customer has been sent an email, and we want to mail all customers who have not received an email. We can use outer joins to make that happen. Let's do a left outer join between the customer table on the leftand the emails table on the right. To help manage output, we will only limit it to the first1,000 rows. The following code snippet is utilized:
+Sometimes, however, we want to return all rows from one of the tables regardless of whether the join predicate is met. In this case, the join predicate is not met; the row forthe second table will be returned as NULL. These joins, where at least one table will be represented in every row after the join operation, are known as outer joins. **Left outer joins** are where the left table will have every row returned. If a row from the other table is not found, a row of NULL is returned. Left outer joins are performed by using the LEFT OUTER JOIN keywords followed by a join predicate. This can also be written in short as LEFT JOIN. To show how left outer joins work, let's examine two tables: the customers tables and the emails table. For the time being, assume that not every customer has been sent an email, and we want to mail all customers who have not received an email. We can use outer joins to make that happen. Let's do a left outer join between the customer table on the leftand the emails table on the right. To help manage output, we will only limit it to the first 1,000 rows. The following code snippet is utilized:
 ```sql
 SELECT * FROM customers c LEFT OUTER JOIN emails e ON e.customer_id = c.customer_id ORDER BY c.customer_id LIMIT 1000;
 ```
@@ -329,7 +327,7 @@ Functions that take rows as input and return one number for each row.
 ```sql
 SELECT COUNT(customer_id) FROM customers;
 ```
-The **COUNT** function will return the number of rows without a NULL value in the column. As the customer_id column is a primary key and cannot be NULL, the COUNT function will return the number of rows in the table. However, if every single column has at least one NULL value, then it would be impossible to determine how many rows there are. To get a count of the number of rows in that situation, you could alternatively use the**COUNT** function with an asterisk, (*), to get the total count of rows:
+The **COUNT** function will return the number of rows without a NULL value in the column. As the customer_id column is a primary key and cannot be NULL, the COUNT function will return the number of rows in the table. However, if every single column has at least one NULL value, then it would be impossible to determine how many rows there are. To get a count of the number of rows in that situation, you could alternatively use the **COUNT** function with an asterisk, (*), to get the total count of rows:
 
 ```sql
 SELECT COUNT(*) FROM customers;
@@ -350,6 +348,21 @@ You can also use the aggregate functions with each other in mathematical ways. I
 ```sql
 SELECT SUM(base_msrp)::FLOAT/COUNT(*) AS avg_base_msrp FROM products
 ```
+
+|Functions     |Explaination                                                       |
+|--------------|-------------------------------------------------------------------|
+|COUNT(ColumnX)|Count the number of rows in "ColumnX" that have non-NULL value     |
+|`COUNT(*)     |Count the number of rows in output table                           |
+|MIN(ColumnX)  |Returns the Minimum value in "ColumnX" that have non-NULL value    |
+|MAX(ColumnX)  |Returns the maximum value in "ColumnX" that have non-NULL value    |
+|SUM(ColumnX)  |Returns the sum of all values in "ColumnX" that have non-NULL value|
+|AVG(ColumnX)  |Returns the average of all values "ColumnX"     |
+|STDDEV(ColumnX)                |Returns the Standard Deviation of all values in "ColumnX" |
+|VAR(ColumnX)                   |Returns the sample variance of  "ColumnX"     |
+|REGR_SLOPE(ColumnX, ColumnY)   |Returns the slope of linear regression for "ColumnX" as Dependent and "ColumnY" as independent variable|
+|REGR_INTERCEPT(ColumnX, ColumnY)|Returns the intercept of linear regression for "ColumnX" as Dependent and "ColumnY" as independent variable|
+|CORR(ColumnX, ColumnY)         |Calculate Pearson Correlation between "ColumnX" & "ColumnY"   |
+
 **Exercise** Calculate the lowest, highest, average, and standard deviation of the price using the MIN, MAX, AVG, and STDDEV aggregate functions, respectively, from the products.
 table:
 ```sql
